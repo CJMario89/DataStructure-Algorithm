@@ -59,26 +59,21 @@ char ** stringMatching(char ** words, int wordsSize, int* returnSize){
             if(Matched[M] == 0){
             	
             	//failure function
-            	//   a b a b a
-            	//-1-1-1 0 1 2
+            	// a b a b a
+            	// 0 0 1 2 0
            		int *failure = (int*)malloc((Wsize[M] + 1) * sizeof(int));
-            	int acu = -1;
-            	failure[0] = acu;
-            	failure[1] = acu;
+            	failure[0] = 0;
+                failure[1] = 0;
             	int Cur = 0;
+                int acu = 0;
             	for(int n = 1; n < Wsize[M]; n++){
-            		if(S[n] == S[Cur]){
-            			Cur++;
-            			acu++;
-					}else{
-						Cur = 0;
-						if(S[n] == S[Cur]){
-							acu = 0;
-						}else{
-							acu = -1;
-						}
-					}
-					failure[n + 1] = acu;
+            		while(acu > 0 && S[n] != S[acu + 1]){
+                        acu = failure[acu + 1];
+                    }
+                    if(S[n] == S[acu + 1]){
+                        acu = acu + 1;
+                    }
+                    failure[n + 1] = acu;
 				}
            	 
            		//matching
@@ -92,7 +87,7 @@ char ** stringMatching(char ** words, int wordsSize, int* returnSize){
            		    	n++;
            		    	
            		    	if(S[m] != L[n]){
-           		    		m = failure[m] + 1;
+           		    		m = failure[m];
 						}
            		    	
            		    	if(m == Wsize[M] - 1){
