@@ -59,42 +59,42 @@ char ** stringMatching(char ** words, int wordsSize, int* returnSize){
             if(Matched[M] == 0){
             	
             	//failure function
-            	// a b a b a
-            	// 0 0 1 2 0
-           		int *failure = (int*)malloc((Wsize[M] + 1) * sizeof(int));
-            	failure[0] = 0;
-                failure[1] = 0;
-            	int Cur = 0;
-                int acu = 0;
+                // 0 1 2 3 4 5
+            	// a b a b a c
+            	//-1-1 0 1 2-1
+           		int *failure = (int*)malloc((Wsize[M]) * sizeof(int));
+            	failure[0] = -1;
+                int acu = -1;
             	for(int n = 1; n < Wsize[M]; n++){
-            		while(acu > 0 && S[n] != S[acu + 1]){
-                        acu = failure[acu + 1];
+            		while(acu > -1 && S[n] != S[acu + 1]){
+                        acu = failure[acu];
                     }
                     if(S[n] == S[acu + 1]){
                         acu = acu + 1;
                     }
-                    failure[n + 1] = acu;
+                    failure[n] = acu;
 				}
            	 
            		//matching
            		int Match = 0;
-           		int m = 0;
-           		int Cur_Pos;
-           		for(int n = 0; n < l - s + 1; n++){
-           		    m = 0;
-           		    while(S[m] == L[n] && m < Wsize[M]){
-           		    	m++;
-           		    	n++;
-           		    	
-           		    	if(S[m] != L[n]){
-           		    		m = failure[m];
-						}
-           		    	
-           		    	if(m == Wsize[M] - 1){
-           		    		Match = 1;
-						}
-					}
-          		}
+           		int m = -1;
+                int n = 0;
+           		while(n < l){
+                    if(L[n] == S[m + 1]){
+                        m++;
+                        n++;
+                    }
+                    if(m == s - 1){
+                        Match = 1;
+                            break;
+                    }
+                    if(L[n] != S[m + 1] && n < l){
+                        if(m != -1)
+                            m = failure[m];
+                        else
+                            n++;
+                    }
+                }
            	 	if(Match){
           	   	  	Matched[M] = 1;
           	   		MatchedString[(*returnSize)] = (char*)malloc((s + 1) * sizeof(char));
