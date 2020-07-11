@@ -1,3 +1,6 @@
+//QuickSort
+//p i-->   <--j
+//0 9 4 8 2 5 1
 void quicksort(char *word, int front, int back){
 	if(back <= front){
 		return;
