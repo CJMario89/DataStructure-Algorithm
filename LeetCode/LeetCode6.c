@@ -1,45 +1,39 @@
 
 
-int lengthOfLongestSubstring(char * s){
-    if(s[0] == ' '){
-        return 1;
-    }
-    printf("%s", s);
-    
+char * convert(char * s, int numRows){
     int s_length = strlen(s);
+    int numSet = (numRows * 2) - 2;
     
-    
-    int *hashTable = (int*)malloc(128 * sizeof(int));
-    for(int i = 0; i < 128; i++){
-        hashTable[i] = -1;
+    char *result = (char*)malloc((s_length + 1) * sizeof(char));
+    if(numRows == 1){
+        return s;
     }
-
-    int val = 0;
-    int count = 0;
-    int Max = 0;
-    int position = 0;
     
-    int i = 0;
-    position = 0;
-    while(i < s_length){
-        val = s[i];
-        if(hashTable[val] == -1){
-            hashTable[val] = i;
-            count++;
-            i++;
-        }else{
-            count -= (hashTable[val] + 1 - position);
-            position = hashTable[val] + 1;
-            for(int j = 0; j < 128; j++){
-                if(hashTable[j] < position){
-                    hashTable[j] = -1;
+    int j = 0;
+    int k = 0;
+    int r = 0;
+    for(int i = 0; i < numRows; i++){
+        if(i != 0 && i != numRows - 1){
+            j = i;
+            k = numSet - i;
+            while(j < s_length){
+                result[r++] = s[j];
+                
+                if(k >= s_length){
+                    break;
                 }
+                result[r++] = s[k];
+                j += numSet;
+                k += numSet;
+            }
+        }else{
+            j = i;
+            while(j < s_length){
+                result[r++] = s[j];
+                j += numSet;
             }
         }
-        if(count > Max){
-            Max = count;
-        }
     }
-    
-    return Max;
+    result[r] = '\0';
+    return result;
 }
